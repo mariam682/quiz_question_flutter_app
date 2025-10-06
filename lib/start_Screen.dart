@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class StartScreen extends StatelessWidget {
-  const StartScreen(this.startQuiz, {super.key});
+  const StartScreen(this.onYesPressed, {super.key, required this.onNoPressed});
 
-  final void Function() startQuiz;
+  final void Function() onYesPressed;
+  final void Function() onNoPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,7 @@ class StartScreen extends StatelessWidget {
           ),
           const SizedBox(height: 80),
           Text(
-            "learn flutter the fun way",
+            "Are you ready for the test?",
             style: GoogleFonts.lato(
               color: Colors.white,
               fontSize: 30,
@@ -27,14 +28,37 @@ class StartScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 40),
-          OutlinedButton.icon(
-            onPressed: startQuiz,
-            style: OutlinedButton.styleFrom(
-              foregroundColor: Colors.white,
-              backgroundColor: Colors.black,
-            ),
-            icon: const Icon(Icons.arrow_right_alt),
-            label: const Text("start Quiz"),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              OutlinedButton.icon(
+                onPressed: onYesPressed,
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.black,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 12,
+                  ),
+                ),
+                icon: const Icon(Icons.check),
+                label: const Text("Yes"),
+              ),
+              const SizedBox(width: 20),
+              OutlinedButton.icon(
+                onPressed: onNoPressed,
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.black,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 12,
+                  ),
+                ),
+                icon: const Icon(Icons.close),
+                label: const Text("No"),
+              ),
+            ],
           ),
         ],
       ),

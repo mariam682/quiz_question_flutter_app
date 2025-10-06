@@ -8,24 +8,28 @@ class Quiz extends StatefulWidget {
   const Quiz({super.key});
 
   @override
-  State<Quiz> createState() {
-    return _QuizState();
-  }
+  State<Quiz> createState() => _QuizState();
 }
 
 class _QuizState extends State<Quiz> {
   var activeScreen = 'start-screen';
-  List<String> SelectedAnswers = [];
+  List<String> selectedAnswers = [];
 
-  void switchScreen() {
+  void switchToQuestions() {
     setState(() {
       activeScreen = 'question-screen';
     });
   }
 
+  void showNoMessage() {
+    setState(() {
+      activeScreen = 'no-screen';
+    });
+  }
+
   void chooseAnswer(String answer) {
-    SelectedAnswers.add(answer);
-    if (SelectedAnswers.length == questions.length) {
+    selectedAnswers.add(answer);
+    if (selectedAnswers.length == questions.length) {
       setState(() {
         activeScreen = 'result-screen';
       });
@@ -34,14 +38,17 @@ class _QuizState extends State<Quiz> {
 
   void restartQuiz() {
     setState(() {
-      SelectedAnswers = [];
+      selectedAnswers = [];
       activeScreen = 'start-screen';
     });
   }
 
   @override
   Widget build(context) {
-    Widget screenWidget = StartScreen(switchScreen);
+    Widget screenWidget = StartScreen(
+      switchToQuestions,
+      onNoPressed: showNoMessage,
+    );
 
     if (activeScreen == 'question-screen') {
       screenWidget = QuestionScreen(onSelectAnswer: chooseAnswer);
@@ -49,8 +56,37 @@ class _QuizState extends State<Quiz> {
 
     if (activeScreen == 'result-screen') {
       screenWidget = ResultScreen(
-        chosenAnswers: SelectedAnswers,
+        chosenAnswers: selectedAnswers,
         onRestart: restartQuiz,
+      );
+    }
+
+    if (activeScreen == 'no-screen') {
+      screenWidget = Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              'Come back when you are ready to test',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.white, fontSize: 28),
+            ),
+            const SizedBox(height: 30),
+            ElevatedButton.icon(
+              onPressed: restartQuiz,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.black,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 12,
+                ),
+              ),
+              icon: const Icon(Icons.arrow_back),
+              label: const Text('Back to Start'),
+            ),
+          ],
+        ),
       );
     }
 
